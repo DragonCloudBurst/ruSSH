@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("hacknc25")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+784b108c01ba6bf9b7690e8deb46c395031c0cb4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b9324127921f9189361baa5a90fac821df2267f5")]
 [assembly: System.Reflection.AssemblyProductAttribute("hacknc25")]
 [assembly: System.Reflection.AssemblyTitleAttribute("hacknc25")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
