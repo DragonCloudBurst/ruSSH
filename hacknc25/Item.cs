@@ -77,9 +77,10 @@ public class Scroll : Item
 {
     // what does the scroll do
     public string Effect;
-    
+
     public Scroll(string effect)
     {
         Effect = effect;
     }
 }
+
