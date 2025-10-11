@@ -19,6 +19,8 @@ public class Player {
 
 public class Game {
 	public Player player;
+
+	public GameUI gui;
 	
 	public int WindowWidth {get;}
 	public int WindowHeight {get;}
@@ -28,9 +30,15 @@ public class Game {
 	private List<Level> levels;
 	private Tile[][,] maps;
 
+	public Messages Messages;
+
 	public Game() {
-		WindowHeight = Console.WindowHeight;
-		WindowWidth = Console.WindowWidth;
+		WindowHeight = Console.WindowHeight-10;
+		WindowWidth = Console.WindowWidth-6;
+
+		Messages = new Messages();
+		
+		gui = new GameUI(WindowWidth+4);
 
 		levels = new List<Level>();
 		var gen = new RogueDungeonGenerator();
@@ -54,13 +62,17 @@ public class Game {
 		Console.CursorVisible = false;
 
 		AnsiConsole.AlternateScreen(() => {
-			while (running) {
-				Render();
-				var key = Console.ReadKey(intercept: true);
-				Update(key);
-			}
-		});
-
+        	AnsiConsole.Live(gui.Layout)
+            .Start(ctx => {
+                while (running) {
+                    Render();
+                    ctx.Refresh();  // This triggers the efficient update
+                    var key = Console.ReadKey(intercept: true);
+                    Update(key);
+                }
+            });
+    	});
+	
 		// clean up
 		Console.CursorVisible = true;
 		AnsiConsole.MarkupLine("[green]Thanks for playing![/]");
@@ -70,7 +82,6 @@ public class Game {
 		var output = new System.Text.StringBuilder();
 
 		var map = levels[player.Floor].Tiles;
-
 		
 		for (int y = 0; y < WindowHeight; y++) {
 			for (int x = 0; x < WindowWidth; x++) {
@@ -89,9 +100,11 @@ public class Game {
 			}
 		}
 
+		
 
-		Console.SetCursorPosition(0, 0);
-		Console.Write(output.ToString());
+		gui.Render(output.ToString(), Messages.String());
+		// Console.SetCursorPosition(0, 0);
+		// Console.Write(output.ToString());
 	}
 
 	public void Update(ConsoleKeyInfo key) {
@@ -151,6 +164,7 @@ public class Game {
 		var map = levels[player.Floor].Tiles;
 
 		if (map[px+dx, py+dy].Type == TileType.Wall) {
+			Messages.AddMessage("You bump into the wall!");
 			goto updateActors;
 		}
 
@@ -167,4 +181,31 @@ public class Game {
 	}
 
 
+}
+
+public class Messages {
+	public List<string> messages;
+
+	public Messages() {
+		messages = new List<string>();
+		AddMessage("Welcome to the dungeon!");
+	}
+
+	public void AddMessage(string message) {
+		messages.Add(message);
+		if (messages.Count > 5) {
+			messages.RemoveAt(0);
+		}
+	}
+
+	public string String() {
+		var output = new System.Text.StringBuilder();
+		for (int i = messages.Count-1; i >= 0; i--) {
+			output.Append(messages[i]);
+			if (i != 0) {
+				output.Append("\n");
+			}
+		}
+		return output.ToString();
+	}
 }
