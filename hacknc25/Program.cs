@@ -19,7 +19,8 @@ public class Player {
 }
 
 public class Game {
-	public Player player;
+    public Player player;
+    public Monster monster1;
 	
 	public int WindowWidth {get;}
 	public int WindowHeight {get;}
@@ -31,9 +32,17 @@ public class Game {
 	public Game() {
 		WindowHeight = Console.WindowHeight;
 		WindowWidth = Console.WindowWidth;
-		player = new Player((WindowWidth / 2), (WindowHeight / 2));
+        player = new Player((WindowWidth / 2), (WindowHeight / 2));
 		var gen = new RogueDungeonGenerator();
-		map = gen.QuickNewDungeon(WindowWidth, WindowHeight, 3);
+        map = gen.QuickNewDungeon(WindowWidth, WindowHeight, 3);
+        var search = new AStarSearch(map);
+        
+        var monster1 = new Monster();
+        monster1.player = player;
+        monster1.CliTest();
+        monster1.map = map;
+        search.AStar(map, new Pair(player.X, player.Y), new Pair(monster1.X, monster1.Y));
+        
 	}
 
 	public void Run() {
@@ -56,20 +65,35 @@ public class Game {
 
 	public void Render() {
 		var output = new System.Text.StringBuilder();
-		
-		for (int y = 0; y < WindowHeight; y++) {
-			for (int x = 0; x < WindowWidth; x++) {
-				if (player.X == x && player.Y == y) {
-					output.Append("@");
-				} else {
-					output.Append(map[x, y].Symbol.ToString());
-				}
-			}
-			output.AppendLine();
-		}
+
+        for (int y = 0; y < WindowHeight; y++)
+        {
+            for (int x = 0; x < WindowWidth; x++)
+            {
+                if (player.X == x && player.Y == y)
+                {
+                    output.Append("@");
+                }
+                else
+                {
+                    output.Append(map[x, y].Symbol.ToString());
+                }
+
+                if (monster1.X == x && monster1.Y == y)
+                {
+                    output.Append("X");
+                }
+                else
+                {
+                    output.Append(map[x, y].Symbol.ToString());
+                }
+            }
+            output.AppendLine();
+        }
 
 
-		Console.SetCursorPosition(0, 0);
+
+        Console.SetCursorPosition(0, 0);
 		Console.Write(output.ToString());
 	}
 
