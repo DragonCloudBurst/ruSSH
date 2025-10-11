@@ -22,17 +22,17 @@ public struct Cell
     public double f, g, h;
 }
     
-public class AStarSearch()
+public class AStarSearch(Tile[,] grid)
 {
     // Creating a shortcut for KeyValuePair<int, int>
 
-    public int[,] grid;
+    public Tile[,] grid = grid;
     public Pair src;
     public Pair dest;
     // A Function to find the shortest path between
     // a given source cell to a destination cell according
     // to A* Search Algorithm
-    public AStarSearch AStar(int[,] grid, Pair src, Pair dest) 
+    public AStarSearch AStar(Tile[,] grid, Pair src, Pair dest) 
     {
         int ROW = grid.GetLength(0);
         int COL = grid.GetLength(1);
@@ -194,10 +194,10 @@ public class AStarSearch()
 
     // A Utility Function to check whether the given cell is
     // blocked or not
-    public static bool IsUnBlocked(int[,] grid, int row, int col)
+    public static bool IsUnBlocked(Tile[,] grid, int row, int col)
     {
         // Returns true if the cell is not blocked else false
-        return grid[row, col] == 1;
+        return grid[row, col].Type == TileType.Wall;
     }
 
     // A Utility Function to check whether destination cell has
@@ -246,10 +246,10 @@ public class AStarSearch()
     }
 
     // Driver method
-    public static AStarSearch Path(int[,] grid, Pair source, Pair destination)
+    public static AStarSearch Path(Tile[,] grid, Pair source, Pair destination)
     {
 
-        var search = new AStarSearch();
+        var search = new AStarSearch(grid);
 
         return search.AStar(grid, source, destination);
     }
