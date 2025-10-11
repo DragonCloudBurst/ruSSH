@@ -1,73 +1,74 @@
-using Spectre.Console;
+// using Spectre.Console;
 
-public class Monster
-{
-    public Player player;
+// public class Monster
+// {
+//     public Player player;
 
-    public Tile[,] map;
+//     public Tile[,] map;
 
-    public int X;
-    public int Y;
-    public bool isValidGen;
+//     public int X;
+//     public int Y;
+//     public bool isValidGen;
 
-    public void Move(int dx, int dy)
-    {
+//     public void Move(int dx, int dy)
+//     {
 
-        var pathToPlayer = MakePath(X, Y);
+//         var pathToPlayer = MakePath(X, Y);
 
-        if (pathToPlayer != null)
-        {
-            X += dx;
-            Y += dy;
-        }
+//         if (pathToPlayer != null)
+//         {
+//             X += dx;
+//             Y += dy;
+//         }
         
-    }
+//     }
 
-    public AStarSearch MakePath(int x, int y)
-    {
-        Pair current = new Pair(x, y);
-        Pair destination = new Pair(player.X, player.Y);
+//     public AStarSearch MakePath(int x, int y)
+//     {
+//         Pair current = new Pair(x, y);
+//         Pair destination = new Pair(player.X, player.Y);
 
 
-        if (AStarSearch.IsUnBlocked(map, X, Y))
-        {
-            isValidGen = true;
-        }
+//         if (AStarSearch.IsUnBlocked(map, X, Y))
+//         {
+//             isValidGen = true;
+//         }
 
-        return AStarSearch.Path(map, current, destination);
-    }
+//         return AStarSearch.Path(map, current, destination);
+//     }
     
-    public void CliTest()
-    {
-        Random randomWidth = new Random();
-        Random randomHeight = new Random();
+//     public void CliTest()
+//     {
+//         Random randomWidth = new Random();
+//         Random randomHeight = new Random();
 
-        var height = Console.WindowHeight;
-        var width = Console.WindowWidth;
+//         var height = Console.WindowHeight;
+//         var width = Console.WindowWidth;
 
-        bool isMonsterGen = false;
+//         bool isMonsterGen = false;
 
 
-        Monster testMonster = new Monster();
+//         Monster testMonster = new Monster();
 
-        while (!isMonsterGen)
-        {
-            int randomX = randomWidth.Next(1, width);
-            int randomY = randomHeight.Next(1, height);
+//         while (!isMonsterGen)
+//         {
+//             int randomX = randomWidth.Next(1, width);
+//             int randomY = randomHeight.Next(1, height);
 
-            testMonster = new Monster();
-            var tryPath = MakePath(randomX, randomY);
+//             testMonster = new Monster();
+//             var tryPath = MakePath(randomX, randomY);
 
-            if (testMonster.isValidGen)
-            {
-                isMonsterGen = true;
-                break;
-            }
+//             if (testMonster.isValidGen)
+//             {
+//                 isMonsterGen = true;
+//                 break;
+//             }
 
-        }
+//         }
 
-        testMonster.Move(1,1);
+//         testMonster.Move(1,1);
 
-    }
+//     }
     
-}
+// }
+

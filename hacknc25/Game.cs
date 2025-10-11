@@ -25,23 +25,29 @@ public class Game {
 
 	private bool running = true;
 
+	private List<Level> levels;
 	private Tile[][,] maps;
 
 	public Game() {
 		WindowHeight = Console.WindowHeight;
 		WindowWidth = Console.WindowWidth;
 
-		maps = new Tile[10][,];
+		levels = new List<Level>();
 		var gen = new RogueDungeonGenerator();
 		for (int i = 0; i < 10; i++) {
-			maps[i] = gen.QuickNewDungeon(WindowWidth, WindowHeight, 4);
+			var tiles = gen.QuickNewDungeon(WindowWidth, WindowHeight, 4);
+			levels.Add(new Level(tiles));
 		}
 
-		var player_pos = MapFuncs.FindTileOfType(TileType.UpStair, maps[0]);
+		var player_pos = MapFuncs.FindTileOfType(TileType.UpStair, levels[0].Tiles);
 		if (!player_pos.HasValue) {
 			throw new Exception("should not be here: could not find upstair on first floor");
 		}
 		player = new Player(player_pos.Value.Item1, player_pos.Value.Item2, 0);
+
+		var bat_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
+		var bat = new Actor(bat_pos.Item1, bat_pos.Item2, "Bat", 'b', new WanderingAI());
+		levels[0].Actors.Add(bat);
 	}
 
 	public void Run() {
@@ -63,16 +69,24 @@ public class Game {
 	public void Render() {
 		var output = new System.Text.StringBuilder();
 
-		var map = maps[player.Floor];
+		var map = levels[player.Floor].Tiles;
+
+		
 		for (int y = 0; y < WindowHeight; y++) {
 			for (int x = 0; x < WindowWidth; x++) {
+
+				var actor = levels[player.Floor].ActorAt(x, y);
 				if (player.X == x && player.Y == y) {
 					output.Append("@");
+				} else if (actor != null) {
+					output.Append(actor.Symbol);
 				} else {
 					output.Append(map[x, y].Symbol.ToString());
 				}
 			}
-			output.AppendLine();
+			if (y != WindowHeight-1) {
+				output.AppendLine();
+			}
 		}
 
 
@@ -81,6 +95,11 @@ public class Game {
 	}
 
 	public void Update(ConsoleKeyInfo key) {
+
+		if (key.Key == ConsoleKey.Oem1) {
+			goto updateActors;
+		}
+		
 		if (key.Key == ConsoleKey.Escape) {
 			running = false;
 			return;
@@ -88,30 +107,30 @@ public class Game {
 
 		if (key.Key == ConsoleKey.OemComma) {
 			if (player.Floor > 0
-				&& maps[player.Floor][player.X, player.Y].Type == TileType.UpStair) {
+				&& levels[player.Floor].Tiles[player.X, player.Y].Type == TileType.UpStair) {
 				player.Floor--;
-				var downstair = MapFuncs.FindTileOfType(TileType.DownStair, maps[player.Floor]);
+				var downstair = MapFuncs.FindTileOfType(TileType.DownStair, levels[player.Floor].Tiles);
 				if (!downstair.HasValue) {
 					throw new Exception("should not be here: could not find downstair in level to go up");
 				}
 				player.X = downstair.Value.Item1;
 				player.Y = downstair.Value.Item2;
 			}
-			return;
+			goto updateActors;
 		}
 
 		if (key.Key == ConsoleKey.OemPeriod) {
 			if (player.Floor < 9
-				&& maps[player.Floor][player.X, player.Y].Type == TileType.DownStair) {
+				&& levels[player.Floor].Tiles[player.X, player.Y].Type == TileType.DownStair) {
 				player.Floor++;
-				var upstair = MapFuncs.FindTileOfType(TileType.UpStair, maps[player.Floor]);
+				var upstair = MapFuncs.FindTileOfType(TileType.UpStair, levels[player.Floor].Tiles);
 				if (!upstair.HasValue) {
 					throw new Exception("should not be here: could not find upstair in next level to go down");
 				}
 				player.X = upstair.Value.Item1;
 				player.Y = upstair.Value.Item2;
 			}
-			return;
+			goto updateActors;
 		}
 
 		var (dx, dy) = key.Key switch {
@@ -129,15 +148,21 @@ public class Game {
 		var px = player.X;
 		var py = player.Y;
 
-		var map = maps[player.Floor];
+		var map = levels[player.Floor].Tiles;
 
 		if (map[px+dx, py+dy].Type == TileType.Wall) {
-			return;
+			goto updateActors;
 		}
 
 		if ((px + dx >= 0 && px + dx < WindowWidth)
 			&& (py + dy >= 0 && py + dy < WindowHeight)) {
 			player.Move(dx, dy);
+		}
+
+		updateActors:
+		foreach (var actor in levels[player.Floor].Actors) {
+			var (mx, my) = actor.Act(new MapSeeingObject(levels[player.Floor].Tiles));
+			actor.Move(mx, my);
 		}
 	}
 

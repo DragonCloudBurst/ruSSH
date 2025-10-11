@@ -65,4 +65,23 @@ public static class MapFuncs {
 
 		return null;
 	}
+
+	public static List<(int, int)> GetAdjacentSquares(Tile[,] grid, int x, int y) {
+		var adjacent = new List<(int, int)>();
+		int width = grid.GetLength(0);
+		int height = grid.GetLength(1);
+
+		var directions = new[] { (0, -1), (0, 1), (-1, 0), (1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)};
+
+		foreach (var (dx, dy) in directions) {
+			int nx = x + dx;
+			int ny = y + dy;
+
+			if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+				adjacent.Add((nx, ny));
+			}
+		}
+
+		return adjacent;
+	}
 }
