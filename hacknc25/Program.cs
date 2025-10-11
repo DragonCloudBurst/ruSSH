@@ -47,7 +47,6 @@ public class Game {
 
 	public void Run() {
 		Console.CursorVisible = false;
-		AnsiConsole.Clear();
 
 		AnsiConsole.AlternateScreen(() => {
 			while (running) {
@@ -59,7 +58,6 @@ public class Game {
 
 		// clean up
 		Console.CursorVisible = true;
-		AnsiConsole.Clear();
 		AnsiConsole.MarkupLine("[green]Thanks for playing![/]");
 	}
 
