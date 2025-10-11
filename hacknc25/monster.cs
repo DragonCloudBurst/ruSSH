@@ -23,7 +23,7 @@ public class Monster
     public void MakePath(int x, int y)
     {
         Pair current = new Pair(x, y);
-        Pair destination = new Pair(Player.X, Player.Y)
+        Pair destination = new Pair(Player.X, Player.Y);
     }
     
 

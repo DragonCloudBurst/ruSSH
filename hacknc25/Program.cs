@@ -26,10 +26,14 @@ public class Game {
 
 	private bool running = true;
 
+	private Tile[,] map;
+
 	public Game() {
 		WindowHeight = Console.WindowHeight;
 		WindowWidth = Console.WindowWidth;
 		player = new Player((WindowWidth / 2), (WindowHeight / 2));
+		var gen = new RogueDungeonGenerator();
+		map = gen.QuickNewDungeon(WindowWidth, WindowHeight, 3);
 	}
 
 	public void Run() {
@@ -51,8 +55,6 @@ public class Game {
 	}
 
 	public void Render() {
-		AnsiConsole.Clear();
-
 		var output = new System.Text.StringBuilder();
 		
 		for (int y = 0; y < WindowHeight; y++) {
@@ -60,13 +62,15 @@ public class Game {
 				if (player.X == x && player.Y == y) {
 					output.Append("@");
 				} else {
-					output.Append(" ");
+					output.Append(map[x, y].Symbol.ToString());
 				}
 			}
 			output.AppendLine();
 		}
 
-		AnsiConsole.Write(output.ToString());
+
+		Console.SetCursorPosition(0, 0);
+		Console.Write(output.ToString());
 	}
 
 	public void Update(ConsoleKeyInfo key) {
@@ -80,11 +84,19 @@ public class Game {
             ConsoleKey.S or ConsoleKey.DownArrow => (0, 1),
             ConsoleKey.A or ConsoleKey.LeftArrow => (-1, 0),
             ConsoleKey.D or ConsoleKey.RightArrow => (1, 0),
+			ConsoleKey.Q => (-1, -1),
+			ConsoleKey.E => (1, -1),
+			ConsoleKey.Z => (-1, 1),
+			ConsoleKey.C => (1, 1),
             _ => (0, 0)
 		};
 
 		var px = player.X;
 		var py = player.Y;
+
+		if (map[px+dx, py+dy].Type == TileType.Wall) {
+			return;
+		}
 
 		if ((px + dx >= 0 && px + dx < WindowWidth)
 			&& (py + dy >= 0 && py + dy < WindowHeight)) {
