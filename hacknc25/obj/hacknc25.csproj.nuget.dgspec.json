@@ -1,26 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "/home/ashe/code/csharp/hacknc25/hacknc25.csproj": {}
+    "/var/home/x390/Programs/HackNC-2025-Roguelike/hacknc25/hacknc25.csproj": {}
   },
   "projects": {
-    "/home/ashe/code/csharp/hacknc25/hacknc25.csproj": {
+    "/var/home/x390/Programs/HackNC-2025-Roguelike/hacknc25/hacknc25.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ashe/code/csharp/hacknc25/hacknc25.csproj",
+        "projectUniqueName": "/var/home/x390/Programs/HackNC-2025-Roguelike/hacknc25/hacknc25.csproj",
         "projectName": "hacknc25",
-        "projectPath": "/home/ashe/code/csharp/hacknc25/hacknc25.csproj",
-        "packagesPath": "/home/ashe/.nuget/packages/",
-        "outputPath": "/home/ashe/code/csharp/hacknc25/obj/",
+        "projectPath": "/var/home/x390/Programs/HackNC-2025-Roguelike/hacknc25/hacknc25.csproj",
+        "packagesPath": "/home/x390/.nuget/packages/",
+        "outputPath": "/var/home/x390/Programs/HackNC-2025-Roguelike/hacknc25/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/ashe/.nuget/NuGet/NuGet.Config"
+          "/home/x390/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
+          "/usr/lib64/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,6 +44,12 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.52.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -60,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
