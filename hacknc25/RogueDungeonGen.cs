@@ -33,6 +33,15 @@ public class RogueDungeonGenerator {
 		var grid = GenerateConnectedGrid(mapWidth, mapHeight, gridSize);
 		var mg = new RogueDungeonMapConverter();
 		var tiles = mg.GenerateMap(grid, gridSize, mapWidth, mapHeight);
+
+		
+		var (downstair_x, downstair_y) = MapFuncs.RandomFreeSquare(tiles);
+		tiles[downstair_x, downstair_y] = new Tile(TileType.DownStair, '>');
+
+
+		var (upstair_x, upstair_y) = MapFuncs.RandomFreeSquare(tiles);
+		tiles[upstair_x, upstair_y] = new Tile(TileType.UpStair, '<');
+
 		return tiles;
 	}
 
@@ -168,7 +177,7 @@ public class RogueDungeonMapConverter() {
 				int px = x + dx;
 				int py = y + dy;
 				if (px >= 0 && px < tiles.GetLength(0) && py >= 0 && py < tiles.GetLength(1)) {
-					tiles[px, py] = new Tile(TileType.Floor, '.');
+					tiles[px, py] = new Tile(TileType.Floor, ' ');
 				}
 			}
 		}
@@ -182,7 +191,7 @@ public class RogueDungeonMapConverter() {
 		var points = Line.Bresenham(x1, y1, x2, y2);
 
 		foreach (var (x, y) in points) {
-			tiles[x, y] = new Tile(TileType.Floor, '.');
+			tiles[x, y] = new Tile(TileType.Floor, ' ');
 		}
 	}
 	
