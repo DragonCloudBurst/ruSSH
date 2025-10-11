@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "iWoeX1Z0lBA=",
+  "dgSpecHash": "IUyUNN/4WxQ=",
   "success": true,
-  "projectFilePath": "/var/home/x390/Programs/HackNC-2025-Roguelike/hacknc25/hacknc25.csproj",
+  "projectFilePath": "/home/ashe/code/csharp/hacknc25/hacknc25.csproj",
   "expectedPackageFiles": [
-    "/home/x390/.nuget/packages/spectre.console/0.52.0/spectre.console.0.52.0.nupkg.sha512"
+    "/home/ashe/.nuget/packages/spectre.console/0.52.0/spectre.console.0.52.0.nupkg.sha512"
   ],
   "logs": []
 }
