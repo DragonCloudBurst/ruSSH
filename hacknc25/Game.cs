@@ -5,6 +5,8 @@ public class Player {
 	public int Y {get; set;}
 	public int Floor {get; set;}
 
+	public int Health = 30;
+
 	public Player(int x, int y, int floor) {
 		X = x;
 		Y = y;
@@ -54,8 +56,10 @@ public class Game {
 		player = new Player(player_pos.Value.Item1, player_pos.Value.Item2, 0);
 
 		var bat_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
-		var bat = new Actor(bat_pos.Item1, bat_pos.Item2, "Bat", 'b', new WanderingAI());
-		levels[0].Actors.Add(bat);
+		levels[0].Actors.Add(MonsterFactory.NewBat(bat_pos.Item1, bat_pos.Item2));
+
+		var goblin_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
+		levels[0].Actors.Add(MonsterFactory.NewGoblin(goblin_pos.Item1, goblin_pos.Item2));
 	}
 
 	public void Run() {
@@ -170,12 +174,25 @@ public class Game {
 
 		if ((px + dx >= 0 && px + dx < WindowWidth)
 			&& (py + dy >= 0 && py + dy < WindowHeight)) {
-			player.Move(dx, dy);
+			var actor = levels[player.Floor].ActorAt(px+dx, py+dy);
+			if (actor == null) {
+				player.Move(dx, dy);
+			} else if (actor.IsDead()) {
+				player.Move(dx, dy);
+				Messages.AddMessage("You step over the dead " + actor.Name + ".");
+			} else {
+				actor.TakeDamage(3);
+				Messages.AddMessage("You hit the " + actor.Name + " for 3 damage.");
+				if (actor.IsDead()) {
+					Messages.AddMessage("You kill the " + actor.Name + "!");
+				}
+			}
+			
 		}
 
 		updateActors:
 		foreach (var actor in levels[player.Floor].Actors) {
-			var (mx, my) = actor.Act(new MapSeeingObject(levels[player.Floor].Tiles));
+			var (mx, my) = actor.Act(new MapSeeingObject(levels[player.Floor], player));
 			actor.Move(mx, my);
 		}
 	}

@@ -18,13 +18,25 @@ public class Level {
 
 // this is for letting AI's see the world and make decisions
 public class MapSeeingObject {
-	public Tile[,] Tiles {get; set;}
+	public Level Level {get; set;}
+	public Player Player;
 
-	public MapSeeingObject(Tile[,] tiles) {
-		Tiles = tiles;
+	public MapSeeingObject(Level level, Player player) {
+		Level = level;
+		Player = player;
 	}
 
 	public (int, int) RandomFreeSquare() {
-		return MapFuncs.RandomFreeSquare(Tiles);
+		return MapFuncs.RandomFreeSquare(Level.Tiles);
 	}
+
+	public Actor? ActorAt(int x, int y) {
+		return Level.ActorAt(x, y);
+	}
+
+	public bool PlayerAt(int x, int y) {
+		return (x == Player.X && y == Player.Y);
+	}
+
+	
 }
