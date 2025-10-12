@@ -7,7 +7,7 @@ static class Menu
     public static PlayerData ShowMenu()
     {
         Console.Clear();
-        const string fileName = "/home/ashe/code/csharp/hacknc25/hacknc25.txt";
+        const string fileName = "/home/j4yden/HackNC2025/HackNC-2025-Roguelike/hacknc25/hacknc25.txt";
         String filePath = Path.Combine(AppContext.BaseDirectory, fileName);
         Console.WriteLine(AppContext.BaseDirectory);
 

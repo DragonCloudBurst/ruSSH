@@ -1,16 +1,20 @@
+using System.Dynamic;
 using Spectre.Console;
 
 public class Player {
+	public PlayerData Data { get; }
 	public int X {get; set;}
 	public int Y {get; set;}
 	public int Floor {get; set;}
 
-	public int Attack = 2;
-	public int Defense = 2;
+	public int Health { get; private set; }
+	public int MaxHealth => Data.Stats.HP;
+	public int Attack => Data.Stats.Att;
+	public int Defense => Data.Stats.Def;
 
-	public int Health = 30;
-
-	public Player(int x, int y, int floor) {
+	public Player(PlayerData data, int x, int y, int floor) {
+		Data = data;
+		Health = data.Stats.HP;
 		X = x;
 		Y = y;
 		Floor = floor;
@@ -43,10 +47,10 @@ public class Game {
 
 	public string StatUI()
     {
-		return $"HLTH: {player.Health}\r\n ATK: {player.Attack}\r\n DEF: {player.Defense}";
+		return $"{player.Data.Name} HP: {player.Health} ATK: {player.Attack} DEF: {player.Defense}";
     }
 
-	public Game() {
+	public Game(PlayerData pdata) {
 		WindowHeight = Console.WindowHeight-10;
 		WindowWidth = Console.WindowWidth-6;
 
@@ -62,10 +66,12 @@ public class Game {
 		}
 
 		var player_pos = MapFuncs.FindTileOfType(TileType.UpStair, levels[0].Tiles);
-		if (!player_pos.HasValue) {
+		if (!player_pos.HasValue)
+		{
 			throw new Exception("should not be here: could not find upstair on first floor");
 		}
-		player = new Player(player_pos.Value.Item1, player_pos.Value.Item2, 0);
+
+		player = new Player(pdata, player_pos.Value.Item1, player_pos.Value.Item2, 0);
 
 		var bat_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
 		levels[0].Actors.Add(MonsterFactory.NewBat(bat_pos.Item1, bat_pos.Item2));
@@ -73,8 +79,16 @@ public class Game {
 		var goblin_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
 		levels[0].Actors.Add(MonsterFactory.NewGoblin(goblin_pos.Item1, goblin_pos.Item2));
 
-		
-		
+		for (int i = 0; i < 5; i++)
+        {
+			var itemFact = new ItemFactory();
+			var itemMade = itemFact.NewItem();
+			var item_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
+			itemMade.X = item_pos.Item1;
+			itemMade.Y = item_pos.Item2;
+			levels[0].Items.Add(itemMade);
+        }
+
 	}
 
 	public void Run() {
@@ -108,16 +122,6 @@ public class Game {
 
 		int itemCounter = 0;
 
-		for (int i = 0; i < 5; i++)
-        {
-			var itemFact = new ItemFactory();
-			var itemMade = itemFact.NewItem();
-			var item_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
-			itemMade.X = item_pos.Item1;
-			itemMade.Y = item_pos.Item2;
-			levels[0].Items.Add(itemMade);
-        }
-
 		for (int y = 0; y < WindowHeight; y++) {
 			for (int x = 0; x < WindowWidth; x++) {
 
@@ -125,7 +129,15 @@ public class Game {
 				var items = levels[0].Items;
 				if (player.X == x && player.Y == y)
 				{
-					output.Append("@");
+					var raceColor = player.Data.Race switch
+					{
+						Race.Human => "yellow",
+						Race.Elf => "magenta",
+						Race.Orc => "green",
+						Race.Dwarf => "red",
+						_ => "white"
+					};
+					output.Append($"[{raceColor}]@[/]");
 				}
 				else if (actor != null)
 				{

@@ -15,6 +15,7 @@ public class Actor {
 		Symbol = symbol;
 		Health = health;
 		Strength = strength;
+		AI = new WanderingAI(this);
 	}
 
 	public void AddAI(IAI ai) {
