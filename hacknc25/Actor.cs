@@ -7,7 +7,7 @@ public class Actor {
 	public int Strength {get; set;}
 	public IAI AI {get; set;}
 
-
+	
 	public Actor(int x, int y, string name, char symbol, int health, int strength) {
 		X = x;
 		Y = y;

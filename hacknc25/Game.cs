@@ -12,6 +12,9 @@ public class Player {
 	public int Attack => Data.Stats.Att;
 	public int Defense => Data.Stats.Def;
 
+	public Item? playerItemSlot = null;
+	public List<Potion> playerPotionSlots { get; set; }
+
 	public Player(PlayerData data, int x, int y, int floor) {
 		Data = data;
 		Health = data.Stats.HP;
@@ -25,9 +28,24 @@ public class Player {
 		Y += dy;
 	}
 
-	public void TakeDamage(int dmg) {
+	public void TakeDamage(int dmg)
+	{
 		Health -= dmg;
 	}
+	
+	public void GetItem
+	{
+		
+	}
+	
+	public void GetPotion(Potion pickup)
+	{
+		if (playerPotionSlots.Count < 3)
+		{
+			playerPotionSlots.Add(pickup);
+		}
+		
+    }
 }
 
 public class Game {
