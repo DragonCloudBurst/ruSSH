@@ -4,6 +4,8 @@ public class Item
     public string Name = "";
     //item's category. example, ammo
     public string Type = "";
+    // character to denote an item
+    string marker = "*";
 
 }
 
@@ -45,7 +47,6 @@ public class Scroll : Item
     public string Effect;
 
 }
-
 
 // DIFFERENT SPECIFIC ITEMS
 
