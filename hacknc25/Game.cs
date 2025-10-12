@@ -51,7 +51,7 @@ public class Game {
     }
 
 	public Game(PlayerData pdata) {
-		WindowHeight = Console.WindowHeight-10;
+		WindowHeight = Console.WindowHeight-11;
 		WindowWidth = Console.WindowWidth-6;
 
 		Messages = new Messages();

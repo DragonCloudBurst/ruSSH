@@ -77,7 +77,13 @@ public class WanderingAI : IAI {
 
 		var actor = mso.ActorAt(nextX, nextY);
 		var player = mso.PlayerAt(nextX, nextY);
-		if (actor != null) {
+		if (actor != null && !actor.IsDead()) {
+			Parent.X = actor.X;
+			Parent.Y = actor.Y;
+			actor.X = curX;
+			actor.Y = curY;
+			path.Clear();
+			// actor.AI.path.Clear();
 			return (0, 0);
 		}
 
@@ -100,13 +106,19 @@ public class WanderingAI : IAI {
 
 public class DumbAI : IAI {
 	private Actor Parent;
+	private WanderingAI subai;
 	public DumbAI(Actor parent) {
 		Parent = parent;
+		subai = new WanderingAI(parent);
 	}
 
 	public (int, int) DecideAction(MapSeeingObject mso, int curX, int curY) {
 		var player_object = mso.Player;
 		var path = Pathfinding.AStar(mso.Level.Tiles, curX, curY, player_object.X, player_object.Y);
+
+		if (mso.DistanceFromPlayer(curX, curY) >= 10) {
+			return subai.DecideAction(mso, curX, curY);
+		}
 
 		var (nextX, nextY) = path[0];
 		if (path == null) {
@@ -127,8 +139,12 @@ public class DumbAI : IAI {
 		var actor = mso.ActorAt(nextX, nextY);
 		var player = mso.PlayerAt(nextX, nextY);
 		if (actor != null && !actor.IsDead()) {
-			actor.TakeDamage(dmg);
-			mso.AddMessage("The " + Parent.Name + " hits the " + actor.Name + " for " + dmg + " damage.");
+			Parent.X = actor.X;
+			Parent.Y = actor.Y;
+			actor.X = curX;
+			actor.Y = curY;
+			path.Clear();
+			// actor.AI.path.Clear();
 			return (0, 0);
 		}
 

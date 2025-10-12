@@ -9,9 +9,9 @@ public class GameUI {
     public GameUI(int Width) {
         width = Width;
         _layout = new Layout("Root").SplitRows(
-            new Layout("GameArea") { Size = Console.WindowHeight - 10 },
+            new Layout("GameArea") { Size = Console.WindowHeight - 11 },
             new Layout("Messages") { Size = 5 },
-            new Layout("StatBlock")
+            new Layout("StatBlock") { Size = 3}
         );
 
         _layout["GameArea"].Update(new Panel("").Header("Game"));

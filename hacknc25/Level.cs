@@ -30,10 +30,15 @@ public class MapSeeingObject {
 		Player = player;
 		Messages = messages;
 	}
-
+	
 	public (int, int) RandomFreeSquare() {
-		return MapFuncs.RandomFreeSquare(Level.Tiles);
+		var (x, y) = MapFuncs.RandomFreeSquare(Level.Tiles);
+		while ((x == Player.X && y == Player.Y) || (Level.ActorAt(x, y) != null)) {
+			(x, y) = MapFuncs.RandomFreeSquare(Level.Tiles);
+		}
+		return (x, y);
 	}
+
 
 	public Actor? ActorAt(int x, int y) {
 		return Level.ActorAt(x, y);
@@ -47,6 +52,9 @@ public class MapSeeingObject {
 		Messages.AddMessage(message);
 	}
 
+	public int DistanceFromPlayer(int x, int y) {
+		return Math.Abs(x - Player.X) + Math.Abs(y - Player.Y);
+	}
 
 	
 }
