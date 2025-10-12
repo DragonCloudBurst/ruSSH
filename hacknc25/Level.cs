@@ -1,10 +1,13 @@
 public class Level {
 	public Tile[,] Tiles {get; set;}
-	public List<Actor> Actors {get; set;}
+	public List<Actor> Actors { get; set; }
+	
+	public List<Item> Items { get;  set; }
 
 	public Level(Tile[,] tiles) {
 		Tiles = tiles;
 		Actors = new List<Actor>();
+		Items = new List<Item>();
 	}
 
 	public Actor? ActorAt(int x, int y) {

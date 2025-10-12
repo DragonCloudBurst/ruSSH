@@ -1,11 +1,13 @@
 public class Item
 {
+    public int X { get; set; }
+	public int Y { get; set; }
     // item's name. self explanatory
     public string Name = "";
     //item's category. example, ammo
     public string Type = "";
     // character to denote an item
-    string marker = "*";
+    public string marker = "*";
 
 }
 
