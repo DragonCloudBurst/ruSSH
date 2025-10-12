@@ -7,13 +7,13 @@ public class Player {
 	public int Y {get; set;}
 	public int Floor {get; set;}
 
-	public int Health { get; private set; }
+	public int Health { get; set; }
 	public int MaxHealth => Data.Stats.HP;
 	public int Attack => Data.Stats.Att;
 	public int Defense => Data.Stats.Def;
 
 	public Item? playerItemSlot = null;
-	public List<Potion> playerPotionSlots { get; set; }
+	public int numPotions { get; set; }
 
 	public Player(PlayerData data, int x, int y, int floor) {
 		Data = data;
@@ -33,19 +33,19 @@ public class Player {
 		Health -= dmg;
 	}
 	
-	public void GetItem
-	{
+	// public void GetItem
+	// {
 		
-	}
+	// }
 	
-	public void GetPotion(Potion pickup)
-	{
-		if (playerPotionSlots.Count < 3)
-		{
-			playerPotionSlots.Add(pickup);
-		}
+	// public void GetPotion(Potion pickup)
+	// {
+	// 	if (playerPotionSlots.Count < 3)
+	// 	{
+	// 		playerPotionSlots.Add(pickup);
+	// 	}
 		
-    }
+ //    }
 }
 
 public class Game {
@@ -65,7 +65,14 @@ public class Game {
 
 	public string StatUI()
     {
-		return $"{player.Data.Name} HP: {player.Health} ATK: {player.Attack} DEF: {player.Defense}";
+		var ret = $"{player.Data.Name} HP: {player.Health} ATK: {player.Attack} DEF: {player.Defense} ";
+		ret += "POTs: ";
+		if (player.numPotions != 0) {
+			for (int i = 1; i <= player.numPotions; i++) {
+				ret += "[red]+[/]";
+			}
+		}
+		return ret;
     }
 
 	public Game(PlayerData pdata) {
@@ -79,12 +86,21 @@ public class Game {
 		levels = new List<Level>();
 		var gen = new RogueDungeonGenerator();
 		for (int i = 0; i < 10; i++) {
+			//monsters
 			var tiles = gen.QuickNewDungeon(WindowWidth, WindowHeight, 4);
 			levels.Add(new Level(tiles));
 			for (int j = 0; j <= i; j++) {
 				var m_pos = MapFuncs.RandomFreeSquare(levels[i].Tiles);
 				var m = MonsterFactory.NewDangerousMonster(m_pos.Item1, m_pos.Item2);
 				levels[i].Actors.Add(m);
+			}
+
+			//health pots
+			var r = new Random();
+			var numPots = r.Next(1, 3);
+			for (var j = 1; j < numPots; j++) {
+				var p_pos = MapFuncs.RandomFreeSquare(levels[i].Tiles);
+				levels[i].potionSpots.Add((p_pos.Item1, p_pos.Item2));
 			}
 		}
 
@@ -95,6 +111,7 @@ public class Game {
 		}
 
 		player = new Player(pdata, player_pos.Value.Item1, player_pos.Value.Item2, 0);
+		player.numPotions = 1;
 
 		var bat_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
 		levels[0].Actors.Add(MonsterFactory.NewBat(bat_pos.Item1, bat_pos.Item2));
@@ -149,7 +166,7 @@ public class Game {
 			for (int x = 0; x < WindowWidth; x++) {
 
 				var actor = levels[player.Floor].ActorAt(x, y);
-				var items = levels[0].Items;
+				// var items = levels[0].Items;
 				if (player.X == x && player.Y == y)
 				{
 					var raceColor = player.Data.Race switch
@@ -162,6 +179,9 @@ public class Game {
 					};
 					output.Append($"[{raceColor}]@[/]");
 				}
+				else if (levels[player.Floor].PotionAt(x, y)) {
+					output.Append("[red]+[/]");
+				}
 				else if (actor != null)
 				{
 					if (actor.IsDead()) {
@@ -170,12 +190,12 @@ public class Game {
 					output.Append(actor.Symbol);
 					}
 				}
-				else if (levels[0].Items[itemCounter].X == x &&
-				levels[0].Items[itemCounter].Y == y)
-				{
-					output.Append(items[itemCounter].marker);
-					itemCounter++;
-				}
+				// else if (levels[0].Items[itemCounter].X == x &&
+				// levels[0].Items[itemCounter].Y == y)
+				// {
+				// 	output.Append(items[itemCounter].marker);
+				// 	itemCounter++;
+				// }
 				else
 				{
 					output.Append(map[x, y].Symbol.ToString());
@@ -196,6 +216,39 @@ public class Game {
 	}
 
 	public void Update(ConsoleKeyInfo key) {
+
+		if (key.Key == ConsoleKey.G) {
+			if (levels[player.Floor].PotionAt(player.X, player.Y)) {
+				if (player.numPotions < 3) {
+					player.numPotions++;
+					Messages.AddMessage("You pick up a health potion.");
+					levels[player.Floor].potionSpots.RemoveAll(p => p.Item1 == player.X && p.Item2 == player.Y);
+				} else {
+					Messages.AddMessage("You have too many potions already!");
+				}
+			}
+		}
+
+		if (key.Key == ConsoleKey.F) {
+			if (player.numPotions == 0) {
+				Messages.AddMessage("You have no potions!");
+				goto updateActors;
+			} else {
+				if (player.Health == player.MaxHealth) {
+					Messages.AddMessage("Your health is full!");
+					goto updateActors;
+				} else {
+					player.Health += 5;
+					if (player.Health > player.MaxHealth) {
+						player.Health = player.MaxHealth;
+					}
+					Messages.AddMessage("You heal for 5 health.");
+					player.numPotions--;
+					goto updateActors;
+				}
+
+			}
+		}
 
 		if (key.Key == ConsoleKey.Oem1) {
 			goto updateActors;

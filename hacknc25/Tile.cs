@@ -2,17 +2,19 @@ public static class TileRenderer {
 	public static string Render(Tile[,] tiles) {
 		var output = new System.Text.StringBuilder();
 		
-		for (int y = 0; y < 40; y++) {
-			for (int x = 0; x < 80; x++) {
-				var tile = tiles[x, y];
-				string c = tile.Symbol.ToString();
-				output.Append(c);
-			}
-			output.AppendLine();
-		}
+		int width = tiles.GetLength(0);
+		int height = tiles.GetLength(1);
+		
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                var tile = tiles[x, y];
+                string c = tile.Symbol.ToString();
+                output.Append(c);
+            }
+            output.AppendLine();
+        }
 
-		return output.ToString();
-	}
+        return output.ToString();	}
 }
 
 public enum TileType {

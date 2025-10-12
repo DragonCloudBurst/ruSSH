@@ -4,10 +4,17 @@ public class Level {
 	
 	public List<Item> Items { get;  set; }
 
+	public List<(int, int)> potionSpots {get; set;}
+
 	public Level(Tile[,] tiles) {
 		Tiles = tiles;
 		Actors = new List<Actor>();
 		Items = new List<Item>();
+		potionSpots = new List<(int, int)>();
+	}
+
+	public bool PotionAt(int x, int y) {
+		return potionSpots.Any(p => p.Item1 == x && p.Item2 == y);
 	}
 
 	public Actor? ActorAt(int x, int y) {
@@ -17,7 +24,9 @@ public class Level {
 		}
 		return actor;
 	}
+
 }
+
 
 // this is for letting AI's see the world and make decisions
 public class MapSeeingObject {
@@ -43,6 +52,7 @@ public class MapSeeingObject {
 	public Actor? ActorAt(int x, int y) {
 		return Level.ActorAt(x, y);
 	}
+
 
 	public bool PlayerAt(int x, int y) {
 		return (x == Player.X && y == Player.Y);
