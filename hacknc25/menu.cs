@@ -4,7 +4,7 @@ using Spectre.Console;
 
 static class Menu
 {
-    public static String[] ShowMenu()
+    public static PlayerData ShowMenu()
     {
         Console.Clear();
         const string fileName = "/home/ashe/code/csharp/hacknc25/hacknc25.txt";
@@ -40,13 +40,16 @@ static class Menu
                 .AddChoices(new[] { "Human", "Elf", "Orc", "Dwarf" })
         );
 
-        var character = new[] { name, classSelection, raceSelection };
+        var raceEnum = Enum.Parse<Race>(raceSelection);
+        var classEnum = Enum.Parse<ClassType>(classSelection);
+        var pdata = CharacterGenerator.Create(name, raceEnum, classEnum);
 
-        Console.WriteLine($"You are {character[0]}, the {character[1]} {character[2]}!");
+        Console.WriteLine($"You are {pdata.Name}, the {pdata.Class} {pdata.Race}!");
         Console.WriteLine("Press any key to start your adventure...");
         Console.ReadKey(intercept: true);
 
-        return character;
+
+        return pdata; 
     }
     
 
