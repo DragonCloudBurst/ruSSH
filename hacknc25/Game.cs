@@ -63,6 +63,11 @@ public class Game {
 		for (int i = 0; i < 10; i++) {
 			var tiles = gen.QuickNewDungeon(WindowWidth, WindowHeight, 4);
 			levels.Add(new Level(tiles));
+			for (int j = 0; j <= i; j++) {
+				var m_pos = MapFuncs.RandomFreeSquare(levels[i].Tiles);
+				var m = MonsterFactory.NewDangerousMonster(m_pos.Item1, m_pos.Item2);
+				levels[i].Actors.Add(m);
+			}
 		}
 
 		var player_pos = MapFuncs.FindTileOfType(TileType.UpStair, levels[0].Tiles);

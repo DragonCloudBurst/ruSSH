@@ -32,4 +32,13 @@ public static class MonsterFactory {
 		demon.AddAI(new DumbAI(demon));
 		return demon;
 	}
+
+	public static Actor NewDangerousMonster(int x, int y) {
+		var mons = new List<Actor>{
+			NewGoblin(x, y), NewHarpy(x, y), NewGargoyle(x, y), NewDemon(x, y)
+		};
+		var r = new Random();
+		var mon = mons[r.Next(0, 3)];
+		return mon;
+	}
 }
