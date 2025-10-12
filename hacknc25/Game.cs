@@ -65,15 +65,7 @@ public class Game {
 		var goblin_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
 		levels[0].Actors.Add(MonsterFactory.NewGoblin(goblin_pos.Item1, goblin_pos.Item2));
 
-		// for (int i = 0; i < 5; i++)
-        // {
-		// 	var itemFact = new ItemFactory();
-		// 	var itemMade = itemFact.NewItem();
-		// 	var item_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
-		// 	itemMade.X = item_pos.Item1;
-		// 	itemMade.Y = item_pos.Item2;
-		// 	levels[0].Items.Add(itemMade);
-        // }
+		
 		
 	}
 
@@ -108,11 +100,21 @@ public class Game {
 
 		int itemCounter = 0;
 
+		for (int i = 0; i < 5; i++)
+        {
+			var itemFact = new ItemFactory();
+			var itemMade = itemFact.NewItem();
+			var item_pos = MapFuncs.RandomFreeSquare(levels[0].Tiles);
+			itemMade.X = item_pos.Item1;
+			itemMade.Y = item_pos.Item2;
+			levels[0].Items.Add(itemMade);
+        }
+
 		for (int y = 0; y < WindowHeight; y++) {
 			for (int x = 0; x < WindowWidth; x++) {
 
 				var actor = levels[player.Floor].ActorAt(x, y);
-				//var items = levels[0].Items;
+				var items = levels[0].Items;
 				if (player.X == x && player.Y == y)
 				{
 					output.Append("@");
@@ -121,11 +123,12 @@ public class Game {
 				{
 					output.Append(actor.Symbol);
 				}
-				// else if (items[itemCounter] != null && itemCounter <= 5)
-                // {
-				// 	output.Append(items[itemCounter].marker);
-				// 	itemCounter++;
-                // }
+				else if (levels[0].Items[itemCounter].X == x &&
+				levels[0].Items[itemCounter].Y == y)
+				{
+					output.Append(items[itemCounter].marker);
+					itemCounter++;
+				}
 				else
 				{
 					output.Append(map[x, y].Symbol.ToString());
