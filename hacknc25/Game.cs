@@ -5,6 +5,9 @@ public class Player {
 	public int Y {get; set;}
 	public int Floor {get; set;}
 
+	public int Attack = 2;
+	public int Defense = 2;
+
 	public int Health = 30;
 
 	public Player(int x, int y, int floor) {
@@ -37,6 +40,11 @@ public class Game {
 	private Tile[][,] maps;
 
 	public Messages Messages;
+
+	public string StatUI()
+    {
+		return $"HLTH: {player.Health}\r\n ATK: {player.Attack}\r\n DEF: {player.Defense}";
+    }
 
 	public Game() {
 		WindowHeight = Console.WindowHeight-10;
@@ -140,9 +148,10 @@ public class Game {
 			}
 		}
 
-		
+		var stats = StatUI();
 
-		gui.Render(output.ToString(), Messages.String());
+
+		gui.Render(output.ToString(), Messages.String(), stats);
 		// Console.SetCursorPosition(0, 0);
 		// Console.Write(output.ToString());
 	}

@@ -9,23 +9,28 @@ public class GameUI {
     public GameUI(int Width) {
         width = Width;
         _layout = new Layout("Root").SplitRows(
-            new Layout("GameArea"),
-            new Layout("Messages") {Size = 7}
+            new Layout("GameArea") { Size = Console.WindowHeight - 10 },
+            new Layout("Messages") { Size = 5 },
+            new Layout("StatBlock")
         );
 
         _layout["GameArea"].Update(new Panel("").Header("Game"));
         _layout["Messages"].Update(new Panel("").Header("Messages"));
     }
 
-    public void Render(string gameText, string messages) {
+    public void Render(string gameText, string messages, string stats) {
         var gamePanel = new Panel(gameText).Header("Game").BorderColor(Color.Green);
         gamePanel.Border = BoxBorder.Ascii;
+
+        var statBlock = new Panel(stats).Header("Stats").BorderColor(Color.Red);
+        statBlock.Border = BoxBorder.Ascii;
 
         var messagePanel = new Panel(messages).Header("Messages").BorderColor(Color.Yellow);
         messagePanel.Border = BoxBorder.Ascii;
         messagePanel.Width = width;
 
         _layout["GameArea"].Update(gamePanel);
+        _layout["StatBlock"].Update(statBlock);
         _layout["Messages"].Update(messagePanel);
     }
 }
