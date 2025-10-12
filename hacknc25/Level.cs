@@ -23,10 +23,12 @@ public class Level {
 public class MapSeeingObject {
 	public Level Level {get; set;}
 	public Player Player;
+	public Messages Messages;
 
-	public MapSeeingObject(Level level, Player player) {
+	public MapSeeingObject(Level level, Player player, Messages messages) {
 		Level = level;
 		Player = player;
+		Messages = messages;
 	}
 
 	public (int, int) RandomFreeSquare() {
@@ -40,6 +42,11 @@ public class MapSeeingObject {
 	public bool PlayerAt(int x, int y) {
 		return (x == Player.X && y == Player.Y);
 	}
+
+	public void AddMessage(string message) {
+		Messages.AddMessage(message);
+	}
+
 
 	
 }

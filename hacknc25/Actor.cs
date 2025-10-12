@@ -4,15 +4,20 @@ public class Actor {
 	public string Name {get; set;}
 	public char Symbol {get; set;}
 	public int Health {get; set;}
+	public int Strength {get; set;}
 	public IAI AI {get; set;}
 
 
-	public Actor(int x, int y, string name, char symbol, int health, IAI ai) {
+	public Actor(int x, int y, string name, char symbol, int health, int strength) {
 		X = x;
 		Y = y;
 		Name = name;
 		Symbol = symbol;
 		Health = health;
+		Strength = strength;
+	}
+
+	public void AddAI(IAI ai) {
 		AI = ai;
 	}
 
@@ -43,9 +48,11 @@ public interface IAI {
 
 public class WanderingAI : IAI {
 	private List<(int, int)> path {get; set;}
+	private Actor Parent;
 	
-	public WanderingAI() {
+	public WanderingAI(Actor parent) {
 		path = new List<(int, int)>();
+		Parent = parent;
 	}
 
 	public (int, int) DecideAction(MapSeeingObject mso, int curX, int curY) {
@@ -69,8 +76,16 @@ public class WanderingAI : IAI {
 
 		var actor = mso.ActorAt(nextX, nextY);
 		var player = mso.PlayerAt(nextX, nextY);
-		if (actor != null || player) {
+		if (actor != null) {
 			return (0, 0);
+		}
+
+		if (player) {
+			var player_object = mso.Player;
+			Random r = new Random();
+			var dmg = r.Next(0, Parent.Strength);
+			player_object.TakeDamage(r.Next(0, Parent.Strength));
+			mso.AddMessage("The " + Parent.Name + " hits you for " + dmg + " damage.");
 		}
 		
 		path.RemoveAt(0);
@@ -83,13 +98,19 @@ public class WanderingAI : IAI {
 }
 
 public class DumbAI : IAI {
-	public DumbAI() { }
+	private Actor Parent;
+	public DumbAI(Actor parent) {
+		Parent = parent;
+	}
 
 	public (int, int) DecideAction(MapSeeingObject mso, int curX, int curY) {
 		var player_object = mso.Player;
 		var path = Pathfinding.AStar(mso.Level.Tiles, curX, curY, player_object.X, player_object.Y);
 
 		var (nextX, nextY) = path[0];
+		if (path == null) {
+			return (0, 0);
+		}
 		
     	if (nextX == curX && nextY == curY) {
         	path.RemoveAt(0);
@@ -98,10 +119,21 @@ public class DumbAI : IAI {
         	}
         	(nextX, nextY) = path[0];
     	}
+		
+		Random r = new Random();
+		var dmg = r.Next(0, Parent.Strength);
 
 		var actor = mso.ActorAt(nextX, nextY);
 		var player = mso.PlayerAt(nextX, nextY);
-		if (actor != null || player) {
+		if (actor != null && !actor.IsDead()) {
+			actor.TakeDamage(dmg);
+			mso.AddMessage("The " + Parent.Name + " hits the " + actor.Name + " for " + dmg + " damage.");
+			return (0, 0);
+		}
+
+		if (player) {
+			player_object.TakeDamage(r.Next(0, Parent.Strength));
+			mso.AddMessage("The " + Parent.Name + " hits you for " + dmg + " damage.");
 			return (0, 0);
 		}
 		

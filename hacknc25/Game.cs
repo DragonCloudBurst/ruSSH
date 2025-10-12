@@ -17,6 +17,10 @@ public class Player {
 		X += dx;
 		Y += dy;
 	}
+
+	public void TakeDamage(int dmg) {
+		Health -= dmg;
+	}
 }
 
 public class Game {
@@ -76,7 +80,8 @@ public class Game {
 	public void Run() {
 		Console.CursorVisible = false;
 
-		AnsiConsole.AlternateScreen(() => {
+		// if you uncomment this it will not show exceptions and crash messages
+		// AnsiConsole.AlternateScreen(() => {
         	AnsiConsole.Live(gui.Layout)
             .Start(ctx => {
                 while (running) {
@@ -86,10 +91,13 @@ public class Game {
                     Update(key);
                 }
             });
-    	});
+    	// });
 	
 		// clean up
 		Console.CursorVisible = true;
+		if (player.Health <= 0) {
+			AnsiConsole.MarkupLine("[red]You died![/]");
+		}
 		AnsiConsole.MarkupLine("[green]Thanks for playing![/]");
 	}
 
@@ -217,8 +225,12 @@ public class Game {
 
 		updateActors:
 		foreach (var actor in levels[player.Floor].Actors) {
-			var (mx, my) = actor.Act(new MapSeeingObject(levels[player.Floor], player));
+			var (mx, my) = actor.Act(new MapSeeingObject(levels[player.Floor], player, Messages));
 			actor.Move(mx, my);
+		}
+
+		if (player.Health <= 0) {
+			running = false;
 		}
 	}
 
