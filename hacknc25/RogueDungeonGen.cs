@@ -53,11 +53,55 @@ public class RogueDungeonGenerator {
 		// generate grid cells
 		for (int y = 0; y < gridSize; y++) {
 			for (int x = 0; x < gridSize; x++) {
-				int roomWidth = random.Next(cellWidth / 3, cellWidth - 2);
-				int roomHeight = random.Next(cellHeight / 3, cellHeight - 2);
+				
+				// THESE VALUES NEED TO BE REPLACED!!! TEMPORARY!!!! JUST FOR SAKE OF PUSH!!!
 
-				int roomX = x * cellWidth + random.Next(1, cellWidth - roomWidth);
-				int roomY = y * cellHeight + random.Next(1, cellHeight - roomHeight);
+				int roomWidth;
+				int roomHeight;
+				if (cellWidth / 3 < cellWidth - 2)
+				{
+					roomWidth = random.Next(cellWidth / 3, cellWidth - 2);
+				}
+				else
+				{
+					// TODO CHANGE THIS
+					roomWidth = 0;
+				}
+
+				if (cellHeight / 3 < cellHeight - 2)
+				{
+					roomHeight = random.Next(cellHeight / 3, cellHeight - 2);
+				}
+				else
+				{
+					// TODO CHANGE THIS
+					roomHeight = 0;
+				}
+
+
+				int roomX;
+				int roomY;
+				if ((cellWidth - roomWidth) <= 2)
+				{
+					// TODO CHANGE THIS
+					roomX = 0;
+				}
+				else
+				{
+					roomX = x * cellWidth + random.Next(1, cellWidth - roomWidth);
+				}
+
+				if ((cellHeight - roomHeight) <= 2)
+				{
+					// TODO CHANGE THIS
+					roomY = 0;
+				}
+				else
+				{
+                    roomY = y * cellHeight + random.Next(1, cellHeight - roomHeight);
+                }
+
+					
 
 				grid[x, y] = new GridCell {
 					GridX = x, GridY = y,
