@@ -65,7 +65,7 @@ public class RogueDungeonGenerator {
 				else
 				{
 					// TODO CHANGE THIS
-					roomWidth = 0;
+					roomWidth = 3;
 				}
 
 				if (cellHeight / 3 < cellHeight - 2)
@@ -84,7 +84,7 @@ public class RogueDungeonGenerator {
 				if ((cellWidth - roomWidth) <= 2)
 				{
 					// TODO CHANGE THIS
-					roomX = 0;
+					roomX = 4;
 				}
 				else
 				{
@@ -94,7 +94,7 @@ public class RogueDungeonGenerator {
 				if ((cellHeight - roomHeight) <= 2)
 				{
 					// TODO CHANGE THIS
-					roomY = 0;
+					roomY = 4;
 				}
 				else
 				{
