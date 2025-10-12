@@ -164,7 +164,11 @@ public class Game {
 				}
 				else if (actor != null)
 				{
+					if (actor.IsDead()) {
+						output.Append($"[grey]{actor.Symbol}[/]");
+					} else {
 					output.Append(actor.Symbol);
+					}
 				}
 				else if (levels[0].Items[itemCounter].X == x &&
 				levels[0].Items[itemCounter].Y == y)
