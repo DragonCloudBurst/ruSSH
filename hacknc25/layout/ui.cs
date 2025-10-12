@@ -1,9 +1,39 @@
 using Spectre.Console;
 
-public class userInterface
+public class GameUI {
+    private readonly Layout _layout;
+
+    public Layout Layout => _layout;
+    private int width;
+
+    public GameUI(int Width) {
+        width = Width;
+        _layout = new Layout("Root").SplitRows(
+            new Layout("GameArea"),
+            new Layout("Messages") {Size = 7}
+        );
+
+        _layout["GameArea"].Update(new Panel("").Header("Game"));
+        _layout["Messages"].Update(new Panel("").Header("Messages"));
+    }
+
+    public void Render(string gameText, string messages) {
+        var gamePanel = new Panel(gameText).Header("Game").BorderColor(Color.Green);
+        gamePanel.Border = BoxBorder.Ascii;
+
+        var messagePanel = new Panel(messages).Header("Messages").BorderColor(Color.Yellow);
+        messagePanel.Border = BoxBorder.Ascii;
+        messagePanel.Width = width;
+
+        _layout["GameArea"].Update(gamePanel);
+        _layout["Messages"].Update(messagePanel);
+    }
+}
+
+public class UserInterface
 {
 
-    public userInterface()
+    public void userInterface()
     {
         Layout layout = new Layout("Root")
         .SplitColumns(
