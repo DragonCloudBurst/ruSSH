@@ -27,16 +27,16 @@ public static class CharacterGenerator
 {
     static readonly Dictionary<ClassType, StatBlock> ClassBase = new()
     {
-        [ClassType.Warrior] = new StatBlock(10, 4, 8),
-        [ClassType.Mage] = new StatBlock(6, 4, 6),
-        [ClassType.Rogue] = new StatBlock(8, 6, 4)
+        [ClassType.Warrior] = new StatBlock(30, 4, 8),
+        [ClassType.Mage] = new StatBlock(20, 5, 6),
+        [ClassType.Rogue] = new StatBlock(25, 6, 4)
     };
 
     static readonly Dictionary<Race, StatBlock> RaceModifiers = new()
     {
         [Race.Human] = new StatBlock(0, 0, 0),
         [Race.Elf] = new StatBlock(-2, 2, 0),
-        [Race.Orc] = new StatBlock(2, -3, -2),
+        [Race.Orc] = new StatBlock(0, 2, -2),
         [Race.Dwarf] = new StatBlock(-1, -1, 2)
     };
 

@@ -150,7 +150,7 @@ public class Game {
 		// clean up
 		Console.CursorVisible = true;
 		if (player.Health <= 0) {
-			AnsiConsole.MarkupLine("[red]You died![/]");
+			AnsiConsole.MarkupLine("[red]You died! You made it to floor [/]" + player.Floor + ".");
 		}
 		AnsiConsole.MarkupLine("[green]Thanks for playing![/]");
 	}
@@ -277,6 +277,7 @@ public class Game {
 			if (player.Floor < 9
 				&& levels[player.Floor].Tiles[player.X, player.Y].Type == TileType.DownStair) {
 				player.Floor++;
+				Messages.AddMessage("You descend to floor " + (player.Floor + 1) + ".");
 				var upstair = MapFuncs.FindTileOfType(TileType.UpStair, levels[player.Floor].Tiles);
 				if (!upstair.HasValue) {
 					throw new Exception("should not be here: could not find upstair in next level to go down");

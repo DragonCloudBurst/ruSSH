@@ -7,11 +7,11 @@ static class Menu
     public static PlayerData ShowMenu()
     {
         Console.Clear();
-        const string fileName = "./hacknc25.txt";
+        const string fileName = "../../../hacknc25.txt";
         String filePath = Path.Combine(AppContext.BaseDirectory, fileName);
         Console.WriteLine(AppContext.BaseDirectory);
 
-        Console.WriteLine(File.ReadAllText(fileName));
+        Console.WriteLine(File.ReadAllText(filePath));
         Console.ReadKey(intercept: true);
 
         var name = AnsiConsole.Prompt(

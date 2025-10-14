@@ -10,7 +10,7 @@ public class GameUI {
         width = Width;
         _layout = new Layout("Root").SplitRows(
             new Layout("GameArea") { Size = Console.WindowHeight - 11 },
-            new Layout("Messages") { Size = 5 },
+            new Layout("Messages") { Size = 7 },
             new Layout("StatBlock") { Size = 3}
         );
 
